@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Keybindings", menuName = "Keybindings")]
 public class Keybindings : ScriptableObject
 {
-    public KeyCode jump, pause, inventory, characterSheet;
+    public KeyCode jump, pause, inventory, characterSheet, unlockCursor;
     public KeyCode abilityBar0, abilityBar1, abilityBar2, abilityBar3, abilityBar4, abilityBar5, abilityBar6, abilityBar7, abilityBar8, abilityBar9, abilityBar10, abilityBar11, abilityBar12;
 
     public KeyCode CheckKey(string key)
@@ -20,6 +20,8 @@ public class Keybindings : ScriptableObject
                 return inventory;
             case "CharacterSheet":
                 return characterSheet;
+            case "UnlockCursor":
+                return unlockCursor;
             case "MainBar0":
                 return abilityBar0;
             case "MainBar1":

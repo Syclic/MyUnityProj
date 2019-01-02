@@ -19,4 +19,4 @@ MonoBehaviour:
   armorModifier: 0
   damageModifier: 0
   ability1: {fileID: 104965462526174640, guid: 50d1c2df802354d498d6c6e0068164da, type: 3}
-  ability2: {fileID: 104965462526174640, guid: 50d1c2df802354d498d6c6e0068164da, type: 3}
+  ability2: {fileID: 104965462526174640, guid: fd9ca2c820f5984419874721f2097fb2, type: 3}

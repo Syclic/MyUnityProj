@@ -14,6 +14,7 @@ public class EquipmentManager : MonoBehaviour
 
     Equipment[] currentEquipment;
     public GameObject[] spellbook;
+    public float[] spellbookCDs;
     Inventory inventory;
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChanged;
@@ -24,6 +25,7 @@ public class EquipmentManager : MonoBehaviour
         int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         currentEquipment = new Equipment[numSlots];
         spellbook = new GameObject[12];
+        spellbookCDs = new float[12];
     }
     public void Equip(Equipment newItem)
     {
@@ -52,6 +54,8 @@ public class EquipmentManager : MonoBehaviour
         currentEquipment[slotIndex] = newAttunement;
         spellbook[(slotIndex - 5) * 2] = newAttunement.ability1;
         spellbook[((slotIndex - 5) * 2) + 1] = newAttunement.ability2;
+        spellbookCDs[(slotIndex - 5) * 2] = 0;
+        spellbookCDs[((slotIndex - 5) * 2) + 1] = 0;
 
         if (onEquipmentChanged != null)
         {
@@ -82,5 +86,12 @@ public class EquipmentManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.U))
             UnequipAll();
+        for (int i = 0; i < 12; i++)
+        {
+            if(spellbook[i] != null && spellbookCDs[i] > 0)
+            {
+                spellbookCDs[i] -= Time.deltaTime;
+            }
+        }
     }
 }

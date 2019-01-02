@@ -5,12 +5,12 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     CharacterController controller;
-    public Transform playerCamTransform, character, centerPoint;
+    public Transform playerCamTransform, character, centerPoint, reticle;
     public Camera playerCam;
 
     private const float yAngleMin = 0.0f, yAngleMax = 65.0f;
     public float mouseSpeed = 3f, moveSpeed = 5f, rotationSpeed = 5;
-    private float verticalVelocity, zoom = 10.0f, currentX = 0.0f, currentY = 0.0f, zoomSpeed = 2, zoomMin = 1f, zoomMax = 5f;
+    private float verticalVelocity, zoom = 5.0f, currentX = 0.0f, currentY = 0.0f, zoomSpeed = 2, zoomMin = 1f, zoomMax = 5f, reticleZoom;
 
     public virtual void Interact()
     {
@@ -26,8 +26,10 @@ public class CharacterManager : MonoBehaviour
     void Update()
     {
         #region Character Movement
-        zoom += Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
-        zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
+        reticleZoom += Input.GetAxis("Mouse ScrollWheel") * 20f;
+        reticleZoom = Mathf.Clamp(reticleZoom, 0.5f, 8f);
+        reticle.localPosition = new Vector3(0, 5, reticleZoom);
+
         currentX += Input.GetAxis("Mouse X") * mouseSpeed;
         currentY -= Input.GetAxis("Mouse Y") * mouseSpeed;
         currentY = Mathf.Clamp(currentY, yAngleMin, yAngleMax);
@@ -55,6 +57,7 @@ public class CharacterManager : MonoBehaviour
 
         Quaternion turnAngle = Quaternion.Euler(0, playerCamTransform.eulerAngles.y, 0);
         character.rotation = Quaternion.Slerp(character.rotation, turnAngle, Time.deltaTime * rotationSpeed);
+        
 
         #endregion
         #region Left Click Interact
@@ -63,7 +66,7 @@ public class CharacterManager : MonoBehaviour
         {
             Ray ray = new Ray(centerPoint.transform.position, transform.forward);
             RaycastHit hit;
-            if(Physics.Raycast(ray, out hit, 20))
+            if (Physics.Raycast(ray, out hit, 20))
             {
                 Interactable interactable = hit.collider.GetComponent<Interactable>();
                 if (interactable != null)
@@ -73,7 +76,17 @@ public class CharacterManager : MonoBehaviour
             }
         }
 
-#endregion
+        #endregion
+        #region CursorLock
+        if (PlayerManager.instance.KeyDown("UnlockCursor"))
+        {
+            PlayerManager.instance.SetCursorState(CursorLockMode.None);
+        }
+        if (PlayerManager.instance.KeyUp("UnlockCursor"))
+        {
+            PlayerManager.instance.SetCursorState(CursorLockMode.Locked);
+        }
+        #endregion
     }
 
     private void LateUpdate()

@@ -16,6 +16,7 @@ MonoBehaviour:
   pause: 27
   inventory: 105
   characterSheet: 99
+  unlockCursor: 308
   abilityBar0: 126
   abilityBar1: 49
   abilityBar2: 50

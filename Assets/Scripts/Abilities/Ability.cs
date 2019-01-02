@@ -8,7 +8,7 @@ public class Ability : MonoBehaviour
     public Sprite icon = null;
     public Collider hitBox;
     public bool isDefaultAbility = false;
-    public float damage, castRange, duration, coolDown;
+    public float damage, maxCastRange, minCastRange, duration, coolDown;
     public int abilityID;
     public HashSet<GameObject> targets = new HashSet<GameObject>();
 
