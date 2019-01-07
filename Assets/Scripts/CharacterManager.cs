@@ -8,9 +8,12 @@ public class CharacterManager : MonoBehaviour
     public Transform playerCamTransform, character, centerPoint, reticle;
     public Camera playerCam;
 
+    public Animator animator;
+    
     private const float yAngleMin = 0.0f, yAngleMax = 65.0f;
-    public float mouseSpeed = 3f, moveSpeed = 5f, rotationSpeed = 5;
-    private float verticalVelocity, zoom = 5.0f, currentX = 0.0f, currentY = 0.0f, zoomSpeed = 2, zoomMin = 1f, zoomMax = 5f, reticleZoom;
+    public float mouseSpeed = 3f, moveSpeed = 5f, walkSpeed = 2f, rotationSpeed = 5f;
+    private float verticalVelocity, zoom = 5.0f, currentX = 0.0f, currentY = 0.0f, reticleZoom;
+    private bool running;
 
     public virtual void Interact()
     {
@@ -21,6 +24,8 @@ public class CharacterManager : MonoBehaviour
     {
         playerCamTransform = playerCam.transform;
         controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
+        running = true;
     }
 
     void Update()
@@ -35,6 +40,23 @@ public class CharacterManager : MonoBehaviour
         currentY = Mathf.Clamp(currentY, yAngleMin, yAngleMax);
         float moveFB = Input.GetAxis("Vertical") * moveSpeed;
         float moveLR = Input.GetAxis("Horizontal") * moveSpeed;
+        Vector2 input = new Vector2(moveLR, moveFB);
+        Vector2 inputDirection = input.normalized;
+
+        if (PlayerManager.instance.KeyDown("ToggleWalk"))
+        {
+            if (running)
+            {
+                running = false;
+            }
+            else
+            {
+                running = true;
+            }
+        }
+
+        float speed = ((running) ? moveSpeed : walkSpeed) * inputDirection.magnitude;
+
 
         if (controller.isGrounded)
         {
@@ -57,7 +79,9 @@ public class CharacterManager : MonoBehaviour
 
         Quaternion turnAngle = Quaternion.Euler(0, playerCamTransform.eulerAngles.y, 0);
         character.rotation = Quaternion.Slerp(character.rotation, turnAngle, Time.deltaTime * rotationSpeed);
-        
+
+        float animationSpeedPercent = ((running) ? 1 : 0.5f) * inputDirection.magnitude;
+        animator.SetFloat("speedPercent", animationSpeedPercent);
 
         #endregion
         #region Left Click Interact
